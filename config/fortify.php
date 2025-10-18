@@ -1,6 +1,6 @@
 <?php
 
-use Laravel\Fortify\Features;
+// use Laravel\Fortify\Features;
 
 return [
 
@@ -28,7 +28,7 @@ return [
     |
     */
 
-    'passwords' => 'users',
+    // 'passwords' => 'users',
 
     /*
     |--------------------------------------------------------------------------
@@ -45,9 +45,9 @@ return [
     |
     */
 
-    'username' => 'email',
+    // 'username' => 'email',
 
-    'email' => 'email',
+    // 'email' => 'email',
 
     /*
     |--------------------------------------------------------------------------
@@ -73,7 +73,7 @@ return [
     |
     */
 
-    'home' => '/dashboard',
+    // 'home' => '/dashboard',
 
     /*
     |--------------------------------------------------------------------------
@@ -114,10 +114,10 @@ return [
     |
     */
 
-    'limiters' => [
-        'login' => 'login',
-        'two-factor' => 'two-factor',
-    ],
+    // 'limiters' => [
+    //     'login' => 'login',
+    //     'two-factor' => 'two-factor',
+    // ],
 
     /*
     |--------------------------------------------------------------------------
@@ -146,14 +146,14 @@ return [
     'features' => [
         // Features::registration(),
         // Features::resetPasswords(),
-        Features::emailVerification(),
+        // Features::emailVerification(),
         // Features::updateProfileInformation(),
         // Features::updatePasswords(),
-        Features::twoFactorAuthentication([
-            'confirm' => true,
-            'confirmPassword' => true,
+        // Features::twoFactorAuthentication([
+            // 'confirm' => true,
+            // 'confirmPassword' => true,
             // 'window' => 0
-        ]),
+        // ]),
     ],
 
 ];
