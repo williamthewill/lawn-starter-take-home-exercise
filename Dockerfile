@@ -17,7 +17,6 @@ ENV DOCKER_BUILD=true
 # Faz o build do frontend
 RUN npm run build
 
-
 # ==============================
 # Etapa 2: Backend (Laravel + PHP)
 # ==============================
