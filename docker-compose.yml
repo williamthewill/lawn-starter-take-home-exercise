@@ -1,0 +1,77 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: lawn_app
+    restart: unless-stopped
+    depends_on:
+      - db
+    volumes:
+      - .:/var/www
+    ports:
+      - "8000:8000"
+    environment:
+      - APP_ENV=local
+      - APP_DEBUG=true
+      - APP_URL=http://localhost:8000
+      - DB_CONNECTION=pgsql
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_DATABASE=lawn-starter-take-home-exercise
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=postgres
+    command: php artisan serve --host=0.0.0.0 --port=8000
+
+  vite:
+    image: node:20
+    container_name: lawn_vite
+    working_dir: /app
+    restart: unless-stopped
+    volumes:
+      - .:/app
+      - ./public/build:/app/public/build
+    command: npm run dev
+    ports:
+      - "5173:5173"
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - DOCKER_BUILD=true
+
+  db:
+    image: postgres:16
+    container_name: lawn_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: lawn-starter-take-home-exercise
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  scheduler:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: lawn_scheduler
+    restart: unless-stopped
+    depends_on:
+      - app
+      - db
+    volumes:
+      - .:/var/www
+    environment:
+      - APP_ENV=local
+      - APP_DEBUG=true
+      - DB_CONNECTION=pgsql
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_DATABASE=lawn-starter-take-home-exercise
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=postgres
+    command: php artisan schedule:work
+
+volumes:
+  pgdata:
