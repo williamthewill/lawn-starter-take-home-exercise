@@ -24,7 +24,7 @@ class AppServiceProvider extends ServiceProvider
         // Registrar o scheduler
         if ($this->app->runningInConsole()) {
             $schedule = $this->app->make(Schedule::class);
-            $schedule->command(ProcessSchemasStats::class)->everyMinute();
+            $schedule->command(ProcessSchemasStats::class)->everyFiveMinutes();
         }
     }
 }
