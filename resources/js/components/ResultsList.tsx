@@ -173,6 +173,7 @@ export default function ResultsList({
                         bottom: "0",
                         backgroundColor: "#fff",
                         width: "100%",
+                        paddingRight: "80px",
                         height: "70px",
                     }}
                 >
@@ -184,15 +185,12 @@ export default function ResultsList({
                             color: "white",
                             border: "none",
                             borderRadius: "25px",
-                            padding: "4px 14px",
                             fontWeight: "700",
                             cursor: "pointer",
                             marginTop: "20px",
-                            width: isMobile ? "80%" : "184px",
+                            width: "100%",
                             height: "34px",
                             fontSize: "15px",
-                            position: "fixed",
-                            bottom: "5px"
                         }}
                     >
                         BACK TO SEARCH

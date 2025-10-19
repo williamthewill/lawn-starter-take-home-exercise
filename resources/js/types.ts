@@ -63,3 +63,32 @@ export type SwapiPersonResponse = {
 export type SwapiMovieResponse = {
     swapiMovie: Film;
 };
+
+export interface TopField {
+    root_field: string;
+    count: number;
+    percentage: number;
+    total: number;
+    created_at: string;
+}
+
+export interface AverageDuration {
+    root_field: string;
+    average_duration: string;
+    created_at: string;
+}
+
+export interface BusiestHourToday {
+    count: number;
+    hour: number;
+    updated_at: string;
+    created_at: string;
+}
+
+export interface StatisticsData {
+    statistics: {
+        topFields: TopField[];
+        AverageDuration: AverageDuration[];
+        BusiestHourToday: BusiestHourToday[];
+    };
+}

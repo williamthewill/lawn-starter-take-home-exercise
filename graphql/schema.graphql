@@ -83,6 +83,32 @@ type SwapiPerson {
   films: [FilmWithoutCharacters] @field(resolver: "App\\GraphQL\\Resolvers\\SwapiPeopleResolver@films")
 }
 
+type topFields {
+  root_field: String
+  count: Int
+  percentage: Float
+  total: Int
+  created_at: DateTime
+}
+type AverageDuration {
+  root_field: String
+  average_duration: String
+  created_at: DateTime
+}
+type BusiestHourToday {
+  count: Int
+  hour: Int
+  updated_at: DateTime
+  created_at: DateTime
+}
+
+
+type Statistics {
+  topFields: [topFields]
+  AverageDuration: [AverageDuration]
+  BusiestHourToday: [BusiestHourToday]
+}
+
 type Query {
   # Buscar todos os personagens
   swapiPeople(name: String): [SwapiPerson] @field(resolver: "App\\GraphQL\\Resolvers\\SwapiPeopleResolver@all")
@@ -95,4 +121,5 @@ type Query {
   # Buscar um personagem por ID
   swapiPerson(id: Int!): SwapiPerson @field(resolver: "App\\GraphQL\\Resolvers\\SwapiPeopleResolver@details")
 
+  statistics: Statistics @field(resolver: "App\\GraphQL\\Resolvers\\StatisticsResolver@stats")
 }
