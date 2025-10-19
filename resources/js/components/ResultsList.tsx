@@ -44,7 +44,7 @@ export default function ResultsList({
         >
             <h3
                 style={{
-                    marginBottom: "15px",
+                    margin: "15px",
                     color: "rgb(56, 56, 56)",
                     fontSize: "1.4rem",
                     fontWeight: "bold",
@@ -93,7 +93,7 @@ export default function ResultsList({
                         listStyle: "none",
                         paddingLeft: 0,
                         margin: 0,
-                        marginBottom: "70px"
+                        marginBottom: isMobile ? "70px" : "auto"
                     }}
                 >
                     {results.map((item, index) => (

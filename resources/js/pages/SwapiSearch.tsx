@@ -121,7 +121,11 @@ export default function SwapiSearch() {
             >
                 <Header onBack={handleBack} isMobile={isMobile} />
 
-                <div style={{ display: "flex", justifyContent: "center", padding: "20px" }}>
+                <div style={{
+                    // display: !isMobile ? "flex" : "auto",
+                    justifyContent: "center",
+                    padding: "20px"
+                }}>
                     {view === "search" && (
                         <SearchBox
                             term={term}
@@ -224,7 +228,11 @@ export default function SwapiSearch() {
                     </div>
                 </div>
             ) : view === "person" ? (
-                <div style={{ display: "flex", justifyContent: "center", padding: "40px" }}>
+                <div style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    padding: "40px"
+                }}>
                     <div
                         style={{
                             width: "100%",
@@ -245,7 +253,11 @@ export default function SwapiSearch() {
                     </div>
                 </div>
             ) : (
-                <div style={{ display: "flex", justifyContent: "center", padding: "40px" }}>
+                <div style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    padding: "40px"
+                }}>
                     <div
                         style={{
                             width: "100%",
