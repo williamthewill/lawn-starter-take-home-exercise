@@ -63,6 +63,51 @@ Containers criados:
 
 ---
 
+## 🧪 Rodando os Testes
+
+Os testes utilizam **PHPUnit** via **Artisan**, e podem ser executados diretamente dentro do container Docker principal (`app`).
+
+### 🔹 Rodar todos os testes
+
+```bash
+docker compose exec app php artisan test
+```
+
+### 🔹 Rodar testes específicos (por filtro)
+
+```bash
+docker compose exec app php artisan test --filter=SwapiMoviesTest
+```
+
+### 🔹 Com modo debug detalhado
+
+```bash
+docker compose exec app php artisan test --filter=SwapiMoviesTest --debug
+```
+
+### 🔹 Entrar no container e testar manualmente
+
+```bash
+docker compose exec app bash
+php artisan test
+```
+
+### 🔹 Alias opcional (para Linux/macOS)
+
+Para facilitar o uso, adicione ao seu `~/.bashrc` ou `~/.zshrc`:
+
+```bash
+alias test-docker='docker compose exec app php artisan test'
+```
+
+Agora você pode rodar diretamente:
+
+```bash
+test-docker --filter=SwapiPeopleTest
+```
+
+---
+
 ## 🧾 GraphQL Schemas
 
 A API utiliza o **Lighthouse** (GraphQL para Laravel) e expõe dois principais tipos: `SwapiPerson` e `Film`.

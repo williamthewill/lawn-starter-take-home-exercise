@@ -124,20 +124,21 @@ class SwapiPeopleResolver
      * @return array
      * Normaliza os dados de uma pessoa da API SWAPI
      */
-    private function normalizePerson($item)
+    private function normalizePerson(array $item)
     {
+        $props = $item['properties'] ?? [];
+
         return [
             'uid' => $item['uid'],
-            'url' => $item['properties']['url'],
-            'name' => $item['properties']['name'] ?? 'Unknown',
-            'filmsUrls' => $item['properties']['films'] ?? [], // armazenar URLs para lazy load
+            'url' => $props['url'] ?? $item['url'] ?? 'Unknown',
+            'name' => $props['name'] ?? 'Unknown',
             'details' => [
-                'birthYear' => $item['properties']['birth_year'] ?? 'Unknown',
-                'gender' => $item['properties']['gender'] ?? 'Unknown',
-                'height' => $item['properties']['height'] ?? 'Unknown',
-                'mass' => $item['properties']['mass'] ?? 'Unknown',
-                'hairColor' => $item['properties']['hair_color'] ?? 'Unknown',
-                'eyeColor' => $item['properties']['eye_color'] ?? 'Unknown',
+                'birthYear' => $props['birth_year'] ?? 'Unknown',
+                'gender' => $props['gender'] ?? 'Unknown',
+                'height' => $props['height'] ?? 'Unknown',
+                'mass' => $props['mass'] ?? 'Unknown',
+                'hairColor' => $props['hair_color'] ?? 'Unknown',
+                'eyeColor' => $props['eye_color'] ?? 'Unknown',
             ],
         ];
     }
