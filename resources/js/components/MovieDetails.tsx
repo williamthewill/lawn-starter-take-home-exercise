@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Film, FilmRef } from "../types";
 
 type MovieDetailsProps = {
@@ -16,23 +16,32 @@ export default function MovieDetails({
     handleCharacterClick,
     handleBackToSearch,
 }: MovieDetailsProps) {
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 720);
     const m = movieDetails;
+
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth <= 720);
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
 
     return (
         <div
+            className="details"
             style={{
-                border: "1px solid #ccc",
-                borderRadius: "5px",
-                padding: "30px",
-                background: "#fff",
+                padding: "0 30px",
                 maxWidth: "900px",
-                margin: "40px auto",
-                display: "flex",
-                flexDirection: "column",
-                gap: "20px",
+                transition: "all 0.3s ease",
             }}
         >
-            <h2>{m?.title ?? selectedMovie?.title ?? "Movie Details"}</h2>
+            <h2
+                className="title"
+                style={{
+                    color: "rgb(56, 56, 56)",
+                    fontWeight: "bold",
+                    fontSize: "30px",
+                }}
+            >{m?.title ?? selectedMovie?.title ?? "Movie Details"}</h2>
 
             {loadingMovie && !m ? (
                 <div
@@ -49,23 +58,45 @@ export default function MovieDetails({
                     Loading movie details…
                 </div>
             ) : (
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "40px" }}>
+                <div
+                    className="movie-details-grid"
+                    style={{
+                        display: "grid",
+                        gridTemplateColumns: "1fr 1fr",
+                        gap: "40px",
+                    }}
+                >
+                    {/* Coluna esquerda */}
                     <div>
-                        <h4 style={{ borderBottom: "1px solid #ddd", paddingBottom: "4px" }}>
+                        <h4
+                            className="subtitle"
+                            style={{
+                                borderBottom: "1px solid rgb(196, 196, 196)",
+                                paddingBottom: "4px",
+                                fontWeight: "bold",
+                            }}>
                             Opening Crawl
                         </h4>
                         <p style={{ whiteSpace: "pre-line" }}>{m?.openingCrawl ?? "—"}</p>
                     </div>
 
+                    {/* Coluna direita */}
                     <div>
-                        <h4 style={{ borderBottom: "1px solid #ddd", paddingBottom: "4px" }}>
+                        <h4
+                            className="subtitle"
+                            style={{
+                                borderBottom: "1px solid rgb(196, 196, 196)",
+                                paddingBottom: "4px",
+                                fontWeight: "bold",
+                            }}>
                             Characters
                         </h4>
                         <ul style={{ listStyle: "none", padding: 0 }}>
                             {m?.characters?.length ? (
                                 m.characters.map((char, i) => (
-                                    <li key={char.uid} style={{ display: "inline" }}>
+                                    <li className="navigation" key={char.uid} style={{ display: "inline" }}>
                                         <a
+                                            className="link"
                                             href="#"
                                             onClick={() => handleCharacterClick(char)}
                                             style={{
@@ -91,18 +122,37 @@ export default function MovieDetails({
                 onClick={handleBackToSearch}
                 style={{
                     alignSelf: "flex-start",
-                    background: "#00b865",
+                    backgroundColor: "rgb(10, 180, 99)",
                     color: "white",
                     border: "none",
                     borderRadius: "25px",
-                    padding: "10px 20px",
-                    fontWeight: "bold",
+                    padding: "4px 14px",
+                    fontWeight: "700",
                     cursor: "pointer",
                     marginTop: "20px",
+                    width: isMobile ? "80%" : "184px",
+                    height: "34px",
+                    fontSize: "15px",
                 }}
             >
                 BACK TO SEARCH
             </button>
+
+            <style>
+                {`
+                @media (max-width: 720px) {
+                    .movie-details-grid {
+                        display: flex !important;
+                        flex-direction: column !important;
+                        gap: 30px !important;
+                    }
+
+                    button {
+                        align-self: center !important;
+                    }
+                }
+                `}
+            </style>
         </div>
     );
 }

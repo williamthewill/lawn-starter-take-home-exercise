@@ -142,6 +142,7 @@ export default function SwapiSearch() {
                             loadingPeople={loadingPeople}
                             loadingMovies={loadingMovies}
                             handleSeeDetails={handleSeeDetails}
+                            handleBackToSearch={handleBackToSearch}
                         />
                     )}
 
@@ -217,6 +218,7 @@ export default function SwapiSearch() {
                                 loadingPeople={loadingPeople}
                                 loadingMovies={loadingMovies}
                                 handleSeeDetails={handleSeeDetails}
+                                handleBackToSearch={handleBackToSearch}
                             />
                         </div>
                     </div>
