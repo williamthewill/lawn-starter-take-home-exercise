@@ -132,7 +132,7 @@ class SwapiPeopleResolver
             'uid' => $item['uid'],
             'url' => $props['url'] ?? $item['url'] ?? 'Unknown',
             'name' => $props['name'] ?? 'Unknown',
-            'filmsUrls' => $item['properties']['films'],
+            'filmsUrls' => $item['properties']['films'] ?? 'Unknown',
             'details' => [
                 'birthYear' => $props['birth_year'] ?? 'Unknown',
                 'gender' => $props['gender'] ?? 'Unknown',

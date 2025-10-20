@@ -63,6 +63,15 @@ Containers criados:
 
 ---
 
+## 💡 Integração com VS Code (Dev Containers)
+
+Este projeto já inclui configuração de **Dev Container** (`.devcontainer/devcontainer.json`), permitindo abrir o ambiente completo diretamente no **VS Code**, com PHP, Composer e dependências reconhecidas automaticamente.
+
+Basta abrir o projeto no VS Code e escolher:  
+👉 **“Reopen in Container”** (via extensão *Dev Containers*).
+
+---
+
 ## 🧪 Rodando os Testes
 
 Os testes utilizam **PHPUnit** via **Artisan**, e podem ser executados diretamente dentro do container Docker principal (`app`).
@@ -82,7 +91,7 @@ docker compose exec app php artisan test --filter=SwapiMoviesTest
 ### 🔹 Com modo debug detalhado
 
 ```bash
-docker compose exec app php artisan test --filter=SwapiMoviesTest --debug
+docker compose exec app php artisan test --debug
 ```
 
 ### 🔹 Entrar no container e testar manualmente
@@ -92,19 +101,24 @@ docker compose exec app bash
 php artisan test
 ```
 
-### 🔹 Alias opcional (para Linux/macOS)
+### 💡 **Nota – Rodando testes dentro do Dev Container**
 
-Para facilitar o uso, adicione ao seu `~/.bashrc` ou `~/.zshrc`:
+Se estiver utilizando o **Dev Container** no VS Code:
 
-```bash
-alias test-docker='docker compose exec app php artisan test'
-```
-
-Agora você pode rodar diretamente:
+- **Não use** `docker compose exec app ...`
+- Basta abrir o terminal integrado (`Ctrl +  \``) e rodar diretamente:  
 
 ```bash
-test-docker --filter=SwapiPeopleTest
+php artisan test
 ```
+
+ou, para testes específicos:
+
+```bash
+php artisan test --filter=SwapiPeopleTest
+```
+
+O VS Code já estará conectado ao container `app`, com o PHP e o Composer do Docker.
 
 ---
 
