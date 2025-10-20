@@ -1,0 +1,20 @@
+{
+  "name": "Lawn Starter (Laravel + Docker)",
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/var/www",
+  "settings": {
+    "intelephense.environment.includePaths": [
+      "/var/www/vendor"
+    ],
+    "php.validate.executablePath": "/usr/local/bin/php"
+  },
+  "extensions": [
+    "bmewburn.vscode-intelephense-client",
+    "xdebug.php-debug",
+    "ryannaddy.laravel-artisan",
+    "mikestead.dotenv",
+    "mhutchie.git-graph"
+  ],
+  "postCreateCommand": "php artisan key:generate || true"
+}
