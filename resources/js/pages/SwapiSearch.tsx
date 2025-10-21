@@ -94,9 +94,23 @@ export default function SwapiSearch() {
     };
 
     const handleBack = () => {
-        if (view === "movie") setView("person");
-        else if (view === "person") setView("results");
-        else if (view === "results") setView("search");
+        if (view === "movie") {
+            // Se há um personagem ativo, volta pra ele.
+            // Caso contrário, volta pra lista de resultados.
+            if (selectedPerson) {
+                setView("person");
+            } else {
+                setView("results");
+            }
+            setSelectedMovie(null);
+        } else if (view === "person") {
+            setView("results");
+            setSelectedPerson(null);
+        } else if (view === "results") {
+            setView("search");
+            setSelectedMovie(null);
+            setSelectedPerson(null);
+        }
     };
 
     // Responsividade
