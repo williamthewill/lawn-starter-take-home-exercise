@@ -1,3 +1,4 @@
+
 <div align="center">
 
 # 🌿 Lawn Starter Take Home Exercise
@@ -209,6 +210,24 @@ query Movie($id: Int!) {
 ```
 
 Essas queries são consumidas no frontend via **Apollo Client (React)**, com `useLazyQuery`.
+
+---
+
+## 📊 Estatísticas (GraphQL Logs)
+
+O sistema coleta automaticamente estatísticas de uso dos *root fields* das queries GraphQL, registradas pela tabela `graphql_logs`.  
+Essas informações são processadas periodicamente pelo comando interno `php artisan schemas:process`, que preenche as tabelas de histórico.
+
+### 🔹 Métricas Calculadas
+| Métrica | Descrição | Tabela |
+|----------|------------|--------|
+| **topFields** | Os 5 *root fields* mais utilizados, com contagem e porcentagem relativa. | `schemas_stats_top_five` |
+| **AverageDuration** | Tempo médio de execução por *root field*. | `schemas_stats_average_duration` |
+| **BusiestHourToday** | Hora do dia (0–23h) com maior número de execuções. | `schemas_stats_most_popular_hour` |
+
+Esses dados são expostos via GraphQL pelo `StatisticsResolver` e exibidos no frontend em `/stats`.
+
+> 💡 **Nota:** O processo de cálculo das estatísticas é executado automaticamente sempre que o ambiente Docker é iniciado, por meio do container `lawn_scheduler`, que roda continuamente o comando `php artisan schedule:work`.
 
 ---
 
