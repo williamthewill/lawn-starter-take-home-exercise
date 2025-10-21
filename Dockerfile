@@ -35,8 +35,9 @@ WORKDIR /var/www
 # Copia os arquivos do backend
 COPY . .
 
-# Instala dependências do Laravel
-RUN composer install --no-dev --optimize-autoloader
+# 🧩 Instala TODAS as dependências (incluindo dev)
+# Isso garante que pacotes como nunomaduro/collision fiquem disponíveis no container.
+RUN composer install --optimize-autoloader
 
 # Copia o build do frontend
 COPY --from=frontend /app/public/build /var/www/public/build
@@ -44,4 +45,5 @@ COPY --from=frontend /app/public/build /var/www/public/build
 # Corrige permissões
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 
+# Comando padrão
 CMD ["php-fpm"]
