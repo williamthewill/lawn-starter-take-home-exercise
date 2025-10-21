@@ -9,6 +9,9 @@ type MovieDetailsProps = {
     handleBackToSearch: () => void;
 };
 
+/**
+ * MovieDetails component displays detailed information about a selected movie.
+ */
 export default function MovieDetails({
     movieDetails,
     selectedMovie,

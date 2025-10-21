@@ -12,7 +12,7 @@
 
 ---
 
-> Ambiente fullstack com **Laravel + React + GraphQL + PostgreSQL**, totalmente rodando em **Docker Compose**.
+> Fullstack environment with **Laravel + React + GraphQL + PostgreSQL**, , fully running in **Docker Compose**.
 
 </div>
 
@@ -22,19 +22,19 @@
 
 - **Backend:** Laravel 12 + Lighthouse (GraphQL)  
 - **Frontend:** React 19 + Vite + TailwindCSS  
-- **Banco:** PostgreSQL 16  
+- **Database:** PostgreSQL 16  
 - **Infra:** Docker Compose + Scheduler Worker  
 
 ---
 
-## ⚙️ Configuração
+## ⚙️ Configutarion
 
-1️⃣ Crie o arquivo `.env`  
+1️⃣ Create the file `.env`  
 ```bash
 cp .env.example .env
 ```
 
-Configure o banco:
+Configure the database:
 ```env
 DB_CONNECTION=pgsql
 DB_HOST=db
@@ -46,7 +46,7 @@ DB_PASSWORD=postgres
 
 ---
 
-## 🐳 Subindo o ambiente
+## 🐳 Starting the environment
 
 ```bash
 docker compose up -d --build
@@ -56,7 +56,7 @@ A aplicação ficará disponível em:
 - 🌐 [http://localhost:8000](http://localhost:8000) → Laravel + React  
 - ⚡ [http://localhost:5173](http://localhost:5173) → Vite Dev Server  
 
-Containers criados:
+The application will be available at:
 - `lawn_app` → Laravel (PHP-FPM)  
 - `lawn_vite` → Frontend (Vite)  
 - `lawn_db` → PostgreSQL  
@@ -64,68 +64,68 @@ Containers criados:
 
 ---
 
-## 💡 Integração com VS Code (Dev Containers)
+## 💡 Integration with VS Code (Dev Containers)
 
-Este projeto já inclui configuração de **Dev Container** (`.devcontainer/devcontainer.json`), permitindo abrir o ambiente completo diretamente no **VS Code**, com PHP, Composer e dependências reconhecidas automaticamente.
+This project already includes configuration for **Dev Container** (`.devcontainer/devcontainer.json`), allowing you to open the complete environment directly in **VS Code**, with PHP, Composer, and dependencies automatically recognized.
 
-Basta abrir o projeto no VS Code e escolher:  
-👉 **“Reopen in Container”** (via extensão *Dev Containers*).
+Just open the project in VS Code and choose:  
+👉 **“Reopen in Container”** (via extension *Dev Containers*).
 
 ---
 
-## 🧪 Rodando os Testes
+## 🧪 Running the Tests
 
-Os testes utilizam **PHPUnit** via **Artisan**, e podem ser executados diretamente dentro do container Docker principal (`app`).
+The tests use **PHPUnit** via **Artisan**, and can be executed directly inside the main Docker container (`app`).
 
-### 🔹 Rodar todos os testes
+### 🔹 Run all tests
 
 ```bash
 docker compose exec app php artisan test
 ```
 
-### 🔹 Rodar testes específicos (por filtro)
+### 🔹 Run specific tests (by filter)
 
 ```bash
 docker compose exec app php artisan test --filter=SwapiMoviesTest
 ```
 
-### 🔹 Com modo debug detalhado
+### 🔹 With detailed debug mode
 
 ```bash
 docker compose exec app php artisan test --debug
 ```
 
-### 🔹 Entrar no container e testar manualmente
+### 🔹 Enter the container and test manually
 
 ```bash
 docker compose exec app bash
 php artisan test
 ```
 
-### 💡 **Nota – Rodando testes dentro do Dev Container**
+### 💡 **Note – Running tests inside the Dev Container**
 
-Se estiver utilizando o **Dev Container** no VS Code:
+If you are using the **Dev Container** in VS Code:
 
-- **Não use** `docker compose exec app ...`
-- Basta abrir o terminal integrado (`Ctrl +  \``) e rodar diretamente:  
+- **Do not use** `docker compose exec app ...`
+- Just open the integrated terminal and run directly:  
 
 ```bash
 php artisan test
 ```
 
-ou, para testes específicos:
+or, for specific tests:
 
 ```bash
 php artisan test --filter=SwapiPeopleTest
 ```
 
-O VS Code já estará conectado ao container `app`, com o PHP e o Composer do Docker.
+VS Code will already be connected to the container `app`, with PHP and Composer from Docker.
 
 ---
 
 ## 🧾 GraphQL Schemas
 
-A API utiliza o **Lighthouse** (GraphQL para Laravel) e expõe dois principais tipos: `SwapiPerson` e `Film`.
+The API uses **Lighthouse** (GraphQL for Laravel) and exposes two main types: `SwapiPerson` e `Film`.
 
 ### 🔹 Schema: SwapiPerson
 
@@ -154,10 +154,9 @@ type Film {
 
 ---
 
-### 🔹 Queries principais
+### 🔹 Queries
 
 ```graphql
-# Buscar pessoas
 query GetPeople($name: String!) {
   swapiPeople(name: $name) {
     name
@@ -166,7 +165,6 @@ query GetPeople($name: String!) {
   }
 }
 
-# Buscar filmes
 query GetMovies($title: String!) {
   swapiMovies(title: $title) {
     title
@@ -175,7 +173,7 @@ query GetMovies($title: String!) {
   }
 }
 
-# Detalhes de uma pessoa
+# Person details
 query Person($id: Int!) {
   swapiPerson(id: $id) {
     name
@@ -195,7 +193,7 @@ query Person($id: Int!) {
   }
 }
 
-# Detalhes de um filme
+# Movie Details
 query Movie($id: Int!) {
   swapiMovie(id: $id) {
     title
@@ -209,33 +207,33 @@ query Movie($id: Int!) {
 }
 ```
 
-Essas queries são consumidas no frontend via **Apollo Client (React)**, com `useLazyQuery`.
+These queries are consumed on the frontend via **Apollo Client (React)**, with `useLazyQuery`.
 
 ---
 
-## 📊 Estatísticas (GraphQL Logs)
+## 📊 Statistics (GraphQL Logs)
 
-O sistema coleta automaticamente estatísticas de uso dos *root fields* das queries GraphQL, registradas pela tabela `graphql_logs`.  
-Essas informações são processadas periodicamente pelo comando interno `php artisan schemas:process`, que preenche as tabelas de histórico.
+The system automatically collects usage statistics of GraphQL query root fields, recorded in the table `graphql_logs`.  
+This information is periodically processed by the internal command `php artisan schemas:process`, which populates the history tables.
 
-### 🔹 Métricas Calculadas
-| Métrica | Descrição | Tabela |
+### 🔹Calculated Metrics
+| Metric | Description | Table |
 |----------|------------|--------|
-| **topFields** | Os 5 *root fields* mais utilizados, com contagem e porcentagem relativa. | `schemas_stats_top_five` |
-| **AverageDuration** | Tempo médio de execução por *root field*. | `schemas_stats_average_duration` |
-| **BusiestHourToday** | Hora do dia (0–23h) com maior número de execuções. | `schemas_stats_most_popular_hour` |
+| **topFields** | The 5 *root fields* most used, with count and relative percentage. | `schemas_stats_top_five` |
+| **AverageDuration** | Average execution time per *root field*. | `schemas_stats_average_duration` |
+| **BusiestHourToday** | Hour of (0–23h) with the highest number of accesses. | `schemas_stats_most_popular_hour` |
 
-Esses dados são expostos via GraphQL pelo `StatisticsResolver` e exibidos no frontend em `/stats`.
+This data is exposed via GraphQL by the `StatisticsResolver` and displayed on the frontend at `/stats`.
 
-> 💡 **Nota:** O processo de cálculo das estatísticas é executado automaticamente sempre que o ambiente Docker é iniciado, por meio do container `lawn_scheduler`, que roda continuamente o comando `php artisan schedule:work`.
+> 💡 **Note:** The statistics calculation process runs automatically whenever the Docker environment starts, through the container `lawn_scheduler`, which continuously runs the command `php artisan schedule:work`.
 
 ---
 
-## 🧠 Dica para chips Apple (M1 / M2 / M3)
+## 🧠 Tip for Apple chips (M1 / M2 / M3)
 
-Se o seu Mac for **ARM-based**, o Docker fará o *pull* automático das imagens compatíveis (`linux/arm64`).
+If your Mac is **ARM-based**, Docker will perform the *pull* automatic pull of compatible images (`linux/arm64`).
 
-👉 Mas, se algum build falhar por causa de dependências nativas (exemplo: pacotes `libpq-dev` ou `gd` do PHP), basta forçar a arquitetura **x86 (amd64)** com o comando abaixo:
+👉 But if any build fails due to native dependencies (for example: packages `libpq-dev` ou `gd` do PHP), just force the architecture **x86 (amd64)** with the command below:
 
 ```bash
 docker compose build --build-arg TARGETARCH=amd64
@@ -243,8 +241,8 @@ docker compose build --build-arg TARGETARCH=amd64
 
 ---
 
-## 👨‍💻 Autor
+## 👨‍💻 Author
 
-Desenvolvido por **William Müller**  
-📍 Santa Catarina - Brasil  
-🚀 Focado em **tecnologias modernas e desenvolvimento de software de alta qualidade**
+Developed by **William Müller**  
+📍 Santa Catarina - Brazil  
+🚀 Focused on **tecnologias modernas e desenvolvimento de software de alta qualidade**

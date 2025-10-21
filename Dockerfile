@@ -1,49 +1,49 @@
 # ==============================
-# Etapa 1: Build do frontend (Vite)
+# Step 1: Frontend (Node.js)
 # ==============================
 FROM node:20 AS frontend
 WORKDIR /app
 
-# Instala dependências do frontend
+# Install Node.js dependencies
 COPY package*.json ./
 RUN npm install
 
-# Copia os arquivos necessários
+# Copy the necessary files
 COPY resources resources
 COPY vite.config.* tsconfig.json ./
 
 ENV DOCKER_BUILD=true
 
-# Faz o build do frontend
+# Build the frontend
 RUN npm run build
 
 # ==============================
-# Etapa 2: Backend (Laravel + PHP)
+# Step 2: Backend (PHP/Laravel)
 # ==============================
 FROM php:8.3-fpm
 
-# Instala dependências do PHP/Laravel
+# Install PHP/Laravel dependencies
 RUN apt-get update && apt-get install -y \
     git curl zip unzip libpng-dev libonig-dev libxml2-dev libpq-dev \
     && docker-php-ext-install pdo pdo_pgsql mbstring exif pcntl bcmath gd
 
-# Instala Composer
+# Install Composer
 COPY --from=composer:2.7 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www
 
-# Copia os arquivos do backend
+# Copy the backend files
 COPY . .
 
-# 🧩 Instala TODAS as dependências (incluindo dev)
-# Isso garante que pacotes como nunomaduro/collision fiquem disponíveis no container.
+# Install ALL dependencies (including dev)
+# This ensures that packages like nunomaduro/collision are available in the container.
 RUN composer install --optimize-autoloader
 
-# Copia o build do frontend
+# Copy the frontend build to the public directory
 COPY --from=frontend /app/public/build /var/www/public/build
 
-# Corrige permissões
+# Fix permissions
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 
-# Comando padrão
+# Start PHP-FPM server
 CMD ["php-fpm"]

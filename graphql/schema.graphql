@@ -40,10 +40,6 @@ type User {
     updated_at: DateTime!
 }
 
-# type Query {
-#   hello: String! @field(resolver: "App\\GraphQL\\Queries\\Hello@resolve")
-# }
-
 type FilmWithoutCharacters {
   title: String
   uid: String
@@ -110,16 +106,18 @@ type Statistics {
 }
 
 type Query {
-  # Buscar todos os personagens
+  # Get People from SWAPI by name filter
   swapiPeople(name: String): [SwapiPerson] @field(resolver: "App\\GraphQL\\Resolvers\\SwapiPeopleResolver@all")
   
-  # Buscar todos os filmes
+  # Get Movies from SWAPI by title filter
   swapiMovies(title: String): [Film] @field(resolver: "App\\GraphQL\\Resolvers\\SwapiMoviesResolver@all")
   
+  # Get a Movie by ID
   swapiMovie(id: Int!): Film @field(resolver: "App\\GraphQL\\Resolvers\\SwapiMoviesResolver@details")
   
-  # Buscar um personagem por ID
+  # Get a Person by ID
   swapiPerson(id: Int!): SwapiPerson @field(resolver: "App\\GraphQL\\Resolvers\\SwapiPeopleResolver@details")
 
+  # Get statistical uses
   statistics: Statistics @field(resolver: "App\\GraphQL\\Resolvers\\StatisticsResolver@stats")
 }

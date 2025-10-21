@@ -3,8 +3,17 @@
 namespace Tests\Feature\GraphQL;
 
 use Illuminate\Support\Facades\Http;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
+/**
+ * Tests for the SwapiPeople GraphQL resolver.
+ * Ensures that people data is correctly fetched and normalized from the SWAPI API.
+ * Covers scenarios for searching people by name.
+ * Mocks HTTP responses to isolate tests from external API dependencies.
+ * Cleans up memory and cache between tests to ensure consistent results.
+ * Disables GraphQL logging to the database for test performance.
+ */
 class SwapiPeopleTest extends TestCase
 {
     protected function setUp(): void
@@ -19,14 +28,14 @@ class SwapiPeopleTest extends TestCase
 
         $this->artisan('migrate', ['--force' => true]);
 
-        // 🔥 Limpa qualquer cache anterior (importante!)
+        // Clear cache before each test
         cache()->flush();
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_people_from_swapi_api(): void
     {
-        // Mocka endpoint correto da swapi.tech
+        // Mock SWAPI API response
         Http::fake([
             'https://swapi.tech/api/people*' => Http::response([
                 'result' => [
@@ -92,7 +101,7 @@ class SwapiPeopleTest extends TestCase
             ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_handles_empty_results(): void
     {
         Http::fake([

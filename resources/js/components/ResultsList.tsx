@@ -11,6 +11,9 @@ interface ResultsListProps {
     handleBackToSearch: () => void;
 }
 
+/**
+ * ResultsList component displays a list of search results for People or Movies.
+ */
 export default function ResultsList({
     peopleResults = [],
     movieResults = [],

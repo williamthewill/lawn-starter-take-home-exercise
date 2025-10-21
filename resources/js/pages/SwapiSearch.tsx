@@ -11,6 +11,11 @@ import MovieDetails from "../components/MovieDetails";
 import { Person, Film, FilmRef } from "../types";
 import Header from "../components/Header";
 
+/**
+ * SwapiSearch component provides a search interface for SWAPI people and movies.
+ * It manages state for search terms, results, and selected details,
+ * and handles responsive design for mobile and desktop views.
+ */
 export default function SwapiSearch() {
     const [term, setTerm] = useState("");
     const [searchType, setSearchType] = useState<"people" | "movies">("people");
@@ -36,7 +41,7 @@ export default function SwapiSearch() {
             fetchPolicy: "network-only",
         });
 
-    // Data
+    // Derived Data
     const peopleResults: Person[] = peopleData?.swapiPeople ?? [];
     const movieResults: Film[] = moviesData?.swapiMovies ?? [];
     const personDetails = personData?.swapiPerson;
@@ -58,6 +63,7 @@ export default function SwapiSearch() {
         }
     };
 
+    // 🔍 Handles clicking on a result to see details
     const handleSeeDetails = (item: Person | Film) => {
         if (searchType === "people") {
             const person = item as Person;
@@ -72,12 +78,14 @@ export default function SwapiSearch() {
         }
     };
 
+    // 🎬 Handles clicking on a movie from person details
     const handleMovieClick = (film: Film | FilmRef) => {
         setSelectedMovie(film);
         setView("movie");
         getMovieDetails({ variables: { id: parseInt(film.uid, 10) } });
     };
 
+    // 👤 Handles clicking on a character from movie details
     const handleCharacterClick = (char: { uid: string; name: string }) => {
         setSelectedPerson({ name: char.name, uid: char.uid, url: "", films: [] });
         setSelectedMovie(null);
@@ -85,7 +93,7 @@ export default function SwapiSearch() {
         getPersonDetails({ variables: { id: parseInt(char.uid, 10) } });
     };
 
-    // 🔙 Sempre volta à tela inicial de busca
+    // 🔙 Sets the view back to "search"
     const handleBackToSearch = () => {
         setView("search");
         setSelectedPerson(null);
@@ -95,8 +103,7 @@ export default function SwapiSearch() {
 
     const handleBack = () => {
         if (view === "movie") {
-            // Se há um personagem ativo, volta pra ele.
-            // Caso contrário, volta pra lista de resultados.
+            // If there is an active person, go back to them. Otherwise, go back to the results list.
             if (selectedPerson) {
                 setView("person");
             } else {
@@ -113,7 +120,6 @@ export default function SwapiSearch() {
         }
     };
 
-    // Responsividade
     useEffect(() => {
         const handleResize = () => setIsMobile(window.innerWidth <= 720);
         window.addEventListener("resize", handleResize);
@@ -136,7 +142,6 @@ export default function SwapiSearch() {
                 <Header onBack={handleBack} isMobile={isMobile} />
 
                 <div style={{
-                    // display: !isMobile ? "flex" : "auto",
                     justifyContent: "center",
                     padding: "20px"
                 }}>
@@ -205,7 +210,7 @@ export default function SwapiSearch() {
                         justifyContent: "center",
                     }}
                 >
-                    {/* Lado esquerdo - Busca */}
+                    {/* Left Side - Search */}
                     <div style={{ width: "350px" }}>
                         <SearchBox
                             term={term}
@@ -218,7 +223,7 @@ export default function SwapiSearch() {
                         />
                     </div>
 
-                    {/* Lado direito - Resultados */}
+                    {/* Right Side - Results */}
                     <div
                         style={{
                             flex: "1 1 600px",

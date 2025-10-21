@@ -16,7 +16,7 @@ class LogGraphQLToDatabase
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Só intercepta /graphql
+        // If not a GraphQL request, skip logging
         if (!$request->is('graphql')) {
             return $next($request);
         }
@@ -25,19 +25,19 @@ class LogGraphQLToDatabase
         $response = $next($request);
         $duration = microtime(true) - $start;
 
-        $payload = $request->getContent(); // string do corpo da requisição
-        $payloadArray = json_decode($payload, true); // transforma em array
+        $payload = $request->getContent(); // Get the raw request body
+        $payloadArray = json_decode($payload, true); // Decode to array
 
-        $queryString = $payloadArray['query'] ?? null; // pega a query real
+        $queryString = $payloadArray['query'] ?? null; // Get the query string
         $rootField = $this->extractRootField($queryString);
         $operation = $payloadArray['operationName'] ?? null;
 
         GraphQLLog::create([
-            'root_field' => $rootField, // "swapiMovie"
+            'root_field' => $rootField,
             'operation'  => $operation,
             'duration'   => $duration,
             'headers'    => $request->headers->all(),
-            'body'       => $payload, // ainda salvo como string
+            'body'       => $payload,
         ]);
 
         return $response;
@@ -47,9 +47,9 @@ class LogGraphQLToDatabase
     {
         if (!$query) return null;
 
-        // Captura o primeiro campo após a abertura
+        // A simple regex to extract the first root field from the query
         if (preg_match('/(?:\s+\w+)?\s*\{\s*(\w+)/', $query, $matches)) {
-            return $matches[1]; // ex: swapiMovie
+            return $matches[1]; // ex: swapiMovie | swapiPeople | statistics
         }
 
         return null;

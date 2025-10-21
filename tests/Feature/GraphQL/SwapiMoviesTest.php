@@ -3,8 +3,18 @@
 namespace Tests\Feature\GraphQL;
 
 use Illuminate\Support\Facades\Http;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
+
+/**
+ * Tests for the SwapiMovies GraphQL resolver.
+ * Ensures that movie data is correctly fetched and normalized from the SWAPI API.
+ * Covers scenarios for searching movies by title and fetching movie details by UID.
+ * Mocks HTTP responses to isolate tests from external API dependencies.
+ * Cleans up memory and cache between tests to ensure consistent results.
+ * Disables GraphQL logging to the database for test performance.
+ */
 class SwapiMoviesTest extends TestCase
 {
     protected function setUp(): void
@@ -21,7 +31,7 @@ class SwapiMoviesTest extends TestCase
         cache()->flush();
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_movies_from_swapi_api(): void
     {
         Http::fake([
@@ -82,23 +92,23 @@ class SwapiMoviesTest extends TestCase
         ]);
 
         $response->assertStatus(200)
-                 ->assertJson([
-                     'data' => [
-                         'swapiMovies' => [
-                             [
-                                 'title' => 'Return of the Jedi',
-                                 'openingCrawl' => 'Luke Skywalker has returned to his home planet...',
-                             ],
-                             [
-                                 'title' => 'The Empire Strikes Back',
-                                 'openingCrawl' => 'It is a dark time for the Rebellion...',
-                             ],
-                         ],
-                     ],
-                 ]);
+            ->assertJson([
+                'data' => [
+                    'swapiMovies' => [
+                        [
+                            'title' => 'Return of the Jedi',
+                            'openingCrawl' => 'Luke Skywalker has returned to his home planet...',
+                        ],
+                        [
+                            'title' => 'The Empire Strikes Back',
+                            'openingCrawl' => 'It is a dark time for the Rebellion...',
+                        ],
+                    ],
+                ],
+            ]);
     }
 
-    /** @test */
+    #[Test]
     public function it_handles_empty_results(): void
     {
         Http::fake([
@@ -122,10 +132,10 @@ class SwapiMoviesTest extends TestCase
         ]);
 
         $response->assertStatus(200)
-                 ->assertJson([
-                     'data' => [
-                         'swapiMovies' => [],
-                     ],
-                 ]);
+            ->assertJson([
+                'data' => [
+                    'swapiMovies' => [],
+                ],
+            ]);
     }
 }

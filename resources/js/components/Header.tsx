@@ -2,24 +2,27 @@ import React from "react";
 import { ArrowLeft } from "lucide-react";
 
 interface HeaderProps {
-    onBack?: () => void;
-    isMobile?: boolean;
+  onBack?: () => void;
+  isMobile?: boolean;
 }
 
+/**
+ * Header component for the application.
+ */
 export default function Header({ onBack, isMobile }: HeaderProps) {
-    const showBack = isMobile && typeof onBack === "function";
+  const showBack = isMobile && typeof onBack === "function";
 
-    return (
-        <header className="app-header">
-            {showBack && (
-                <button onClick={onBack} className="back-button" aria-label="Back">
-                    <ArrowLeft size={22} />
-                </button>
-            )}
-            <h1 className="app-title">SWStarter</h1>
+  return (
+    <header className="app-header">
+      {showBack && (
+        <button onClick={onBack} className="back-button" aria-label="Back">
+          <ArrowLeft size={22} />
+        </button>
+      )}
+      <h1 className="app-title">SWStarter</h1>
 
-            <style>
-                {`
+      <style>
+        {`
           .app-header {
             position: fixed;
             top: 0;
@@ -62,7 +65,7 @@ export default function Header({ onBack, isMobile }: HeaderProps) {
             }
           }
         `}
-            </style>
-        </header>
-    );
+      </style>
+    </header>
+  );
 }

@@ -15,11 +15,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        // Log GraphQL requests to the database. Every request to /graphql will be logged.
         $middleware->append(LogGraphQLToDatabase::class);
         $middleware->encryptCookies(except: ['appearance', 'sidebar_state']);
         
         $middleware->web(append: [
-            // HandleAppearance::class,
             HandleInertiaRequests::class,
             AddLinkHeadersForPreloadedAssets::class,
         ]);

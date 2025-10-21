@@ -10,6 +10,9 @@ interface SearchBoxProps {
     loadingPeople?: boolean;
 }
 
+/**
+ * SearchBox component allows users to input search terms and select search type.
+ */
 export default function SearchBox({
     term,
     setTerm,

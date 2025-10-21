@@ -9,6 +9,7 @@ class StatisticsResolver
 
     public function stats($root, array $args)
     {
+        // Fetch the latest top 5 schemas statistics
         $topFields = DB::table('schemas_stats_top_five')
             ->select('root_field', 'count', 'percentage', 'total', 'created_at')
             ->whereIn('id', function ($query) {
@@ -19,6 +20,7 @@ class StatisticsResolver
             ->orderByDesc('created_at')
             ->get();
 
+        // Fetch the latest average duration statistics
         $AverageDuration = DB::table('schemas_stats_average_duration')
             ->select('root_field', 'average_duration', 'created_at')
             ->whereIn('id', function ($query) {
@@ -29,6 +31,7 @@ class StatisticsResolver
             ->orderByDesc('created_at')
             ->get();
 
+        // Fetch the latest busiest hour statistics
         $BusiestHourToday = DB::table('schemas_stats_most_popular_hour')
             ->select('hour', 'count', 'updated_at', 'created_at')
             ->orderByDesc('updated_at')

@@ -14,7 +14,15 @@ import { useQuery } from "@apollo/client/react";
 import { StatisticsData } from "../types";
 import GET_STATISTICS from "../graphql/statistics";
 
-const StatisticsPage: React.FC = () => {
+/**
+ * StatisticsPage component displays usage statistics using various charts.
+ * It fetches data via GraphQL and handles loading and error states.
+ * The page includes:
+ * - Most Used Schemas (Bar Chart)
+ * - Average Response Time (Line Chart)
+ * - Busiest Hours (per Day) (Line Chart)
+ */
+export default function StatisticsPage() {
     const [loading, setLoading] = useState(true);
     const [topFields, setTopFields] = useState<any[]>([]);
     const [avg, setAvg] = useState<any[]>([]);
@@ -76,7 +84,7 @@ const StatisticsPage: React.FC = () => {
                     .sort((a, b) => (a.created_at > b.created_at ? 1 : -1));
 
                 if (arr.length === 1) {
-                    arr.push({ ...arr[0], label: arr[0].label + " (duplicado)" });
+                    arr.push({ ...arr[0], label: arr[0].label + " (duplicated)" });
                 }
 
                 return arr;
@@ -104,7 +112,7 @@ const StatisticsPage: React.FC = () => {
                     fontSize: 18,
                 }}
             >
-                ⏳ Carregando estatísticas...
+                ⏳ Loading Statistics...
             </div>
         );
     }
@@ -122,7 +130,7 @@ const StatisticsPage: React.FC = () => {
                     fontSize: 18,
                 }}
             >
-                ❌ Erro ao carregar dados: {error.message}
+                ❌ Error Loading Data: {error.message}
             </div>
         );
     }
@@ -140,7 +148,7 @@ const StatisticsPage: React.FC = () => {
                     fontSize: 18,
                 }}
             >
-                ⚠️ Nenhum dado disponível.
+                ⚠️ No Data Available.
             </div>
         );
     }
@@ -158,15 +166,15 @@ const StatisticsPage: React.FC = () => {
 
     return (
         <div style={{ padding: 24, background: "#F9FAFB", minHeight: "100vh", color: "#111827" }}>
-            <h1 style={{ fontSize: 24, fontWeight: 800, marginBottom: 8 }}>📊 Estatísticas de Uso</h1>
+            <h1 style={{ fontSize: 24, fontWeight: 800, marginBottom: 8 }}>📊 Usage Statistics</h1>
             <p style={{ color: "#6B7280", marginBottom: 24 }}>
-                Última atualização: {formattedDate}
+                Last Update: {formattedDate}
             </p>
 
-            {/* --- Campos mais acessados --- */}
+            {/* --- Most Used Schemas --- */}
             <section style={{ background: "#fff", borderRadius: 16, padding: 24, marginBottom: 24 }}>
                 <h2 style={{ fontSize: 18, fontWeight: 600, marginBottom: 16 }}>
-                    Campos mais acessados
+                    Most Used Schemas
                 </h2>
                 <div style={{ width: "100%", height: 300 }}>
                     <ResponsiveContainer width="100%" height="100%">
@@ -178,7 +186,7 @@ const StatisticsPage: React.FC = () => {
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis type="number" dataKey="count" domain={[0, "dataMax + 5"]} />
                             <YAxis dataKey="root_field" type="category" width={140} />
-                            <Tooltip formatter={(v: any) => [`${v} acessos`, "Total"]} />
+                            <Tooltip formatter={(v: any) => [`${v} accesses`, "Total"]} />
                             <Bar
                                 dataKey="count"
                                 barSize={24}
@@ -190,10 +198,10 @@ const StatisticsPage: React.FC = () => {
                 </div>
             </section>
 
-            {/* --- Duração Média por Campo --- */}
+            {/* --- Average Response Time --- */}
             <section style={{ background: "#fff", borderRadius: 16, padding: 24, marginBottom: 24 }}>
                 <h2 style={{ fontSize: 18, fontWeight: 600, marginBottom: 16 }}>
-                    Duração Média por Campo
+                    Average Response Time
                 </h2>
                 <div style={{ width: "100%", height: 300 }}>
                     <ResponsiveContainer width="100%" height="100%">
@@ -201,7 +209,7 @@ const StatisticsPage: React.FC = () => {
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis dataKey="root_field" />
                             <YAxis />
-                            <Tooltip formatter={(v: any) => [`${v}s`, "Duração média"]} />
+                            <Tooltip formatter={(v: any) => [`${v}s`, "Average Response"]} />
                             <Line
                                 type="monotone"
                                 dataKey="average_duration"
@@ -214,10 +222,10 @@ const StatisticsPage: React.FC = () => {
                 </div>
             </section>
 
-            {/* --- Horas mais movimentadas (por dia) --- */}
+            {/* --- Busiest Hours (per Day) --- */}
             <section style={{ background: "#fff", borderRadius: 16, padding: 24 }}>
                 <h2 style={{ fontSize: 18, fontWeight: 600, marginBottom: 16 }}>
-                    Horas mais movimentadas (por dia)
+                    Busiest Hours (per Day)
                 </h2>
                 <div style={{ width: "100%", height: 320 }}>
                     <ResponsiveContainer width="100%" height="100%">
@@ -227,7 +235,7 @@ const StatisticsPage: React.FC = () => {
                             <YAxis />
                             <Tooltip
                                 formatter={(v: any, _n: any, p: any) => [
-                                    `${v} acessos`,
+                                    `${v} accesses`,
                                     p?.payload?.label ?? "",
                                 ]}
                             />
@@ -245,5 +253,3 @@ const StatisticsPage: React.FC = () => {
         </div>
     );
 };
-
-export default StatisticsPage;

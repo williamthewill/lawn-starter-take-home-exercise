@@ -2,6 +2,11 @@
 
 namespace App\GraphQL\Resolvers;
 
+/**
+ * Adjust the memory limit to 256MB,
+ * required for multiple parallel HTTP requests,
+ * especially when fetching character details in batches.
+ */
 ini_set('memory_limit', '256M');
 
 use Illuminate\Support\Facades\Http;
@@ -11,13 +16,14 @@ class SwapiPeopleResolver
 {
     /**
      * @return array
-     * Busca todas as pessoas da API SWAPI
+     * Fetch people from the SWAPI API by name
      */
     public function all($root, array $args)
     {
         $name = $args['name'] ?? null;
         $response = Http::get('https://swapi.tech/api/people', ['name' => $name]);
 
+        // Return empty if the request failed
         if ($response->failed()) {
             return [];
         }
@@ -27,29 +33,31 @@ class SwapiPeopleResolver
         return collect($results)->map(function ($item) {
             $normalized = $this->normalizePerson($item);
 
-            // Cache individual por UID
+            // Cache the normalized person data for 1 hour
             cache()->put("swapi_person_{$normalized['uid']}", $normalized, 3600);
 
             return $normalized;
         })->toArray();
 
-        // A API retorna um array em "results"
         return $response->json()["result"] ?? [];
     }
 
     /**
      * @return array
-     * Busca detalhes de uma pessoa específica da API SWAPI
+     * Fetch details of a specific person from the SWAPI API by its UID
      */
     public function details($root, array $args)
     {
         $uid = $args['id'] ?? null;
 
+        // Return null if no UID provided
         if ($uid === null) {
             return null;
         }
 
+        // Check cache first
         return cache()->remember("swapi_person_{$uid}", 3600, function () use ($uid) {
+            // If not in cache, fetch from API
             $response = Http::get("https://swapi.tech/api/people/{$uid}");
 
             if ($response->failed()) {
@@ -64,20 +72,25 @@ class SwapiPeopleResolver
 
     /**
      * @return array
-     * Busca os filmes associados a uma pessoa específica da API SWAPI
+     * Fetch the films associated with a specific person from the SWAPI API
+     * Uses asynchronous HTTP requests to improve performance
+     * Implements caching to reduce repeated calls
+     * Returns a list of films with title, URL, and UID
      */
     public function films($root)
     {
+        // Get film URLs from the person data
         $urls = $root['filmsUrls'] ?? [];
 
+        // Return empty if no URLs provided
         if (empty($urls)) {
             return [];
         }
 
+        // New Guzzle HTTP client
         $client = new Client();
         $films = [];
 
-        // Separa URLs que ainda não estão em cache
         $urlsToFetch = [];
         foreach ($urls as $url) {
             $cached = cache()->get("film_" . md5($url));
@@ -88,16 +101,16 @@ class SwapiPeopleResolver
             }
         }
 
-        // Criar Promises apenas para os filmes que não estão em cache
+        // Create Promises only for the movies that are not in cache
         $promises = [];
         foreach ($urlsToFetch as $url) {
             $promises[$url] = $client->getAsync($url);
         }
 
-        // Resolver todas as Promises de uma vez
+        // Wait for all requests to complete
         $responses = \GuzzleHttp\Promise\Utils::settle($promises)->wait();
 
-        // Processar respostas e salvar no cache
+        // Process responses and cache results
         foreach ($responses as $url => $res) {
             if ($res['state'] === 'fulfilled' && $res['value']->getStatusCode() === 200) {
                 $body = json_decode($res['value']->getBody(), true);
@@ -108,21 +121,22 @@ class SwapiPeopleResolver
                     'openingCrawl' => $body['result']['properties']['opening_crawl'],
                 ];
                 $films[$url] = $film;
-                cache()->put("film_" . md5($url), $film, 3600); // Cache por 1 hora
+                cache()->put("film_" . md5($url), $film, 3600); // Cache for 1 hour
             } else {
                 $films[$url] = null;
             }
         }
 
-        gc_collect_cycles(); // coletar ciclos de lixo
+        // Free memory
+        gc_collect_cycles(); 
 
-        // Retornar no formato esperado pelo GraphQL
         return $films;
     }
 
     /**
+     * @param array $item
      * @return array
-     * Normaliza os dados de uma pessoa da API SWAPI
+     * Normalize person data structure
      */
     private function normalizePerson(array $item)
     {

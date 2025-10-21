@@ -4,6 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Model representing a log entry for GraphQL requests.
+ * Stores details such as root field, operation name, duration, headers, and body.
+ * Mapped to the 'graphql_logs' database table.
+ */
 class GraphQLLog extends Model
 {
     protected $table = 'graphql_logs';

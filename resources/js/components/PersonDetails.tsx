@@ -9,6 +9,9 @@ type PersonDetailsProps = {
     handleBackToSearch: () => void;
 };
 
+/**
+ * PersonDetails component displays detailed information about a selected person.
+ */
 export default function PersonDetails({
     personDetails,
     selectedPerson,
